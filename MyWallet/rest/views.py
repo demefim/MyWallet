@@ -2,10 +2,11 @@ from rest_framework import views, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from MyWallet.models import Account, Category, Split, Transaction
+from MyWallet.models import Account, Category, RecurringTransaction, Split, Transaction
 from MyWallet.rest import serializers
 from MyWallet.rest.permissions import ProtectSystemAccount
-from MyWallet.rest.serializers import (AccountSerializer, CategorySerializer, SplitSerializer, TransactionSerializer)
+from MyWallet.rest.serializers import (AccountSerializer, CategorySerializer, RecurringTransactionSerializer,
+                                       SplitSerializer, TransactionSerializer)
 
 
 class AccountViewSet(viewsets.ModelViewSet):
@@ -36,9 +37,21 @@ class CategoryViewSet(viewsets.ModelViewSet):
     pagination_class = None
 
 
+class RecurringTransactionsViewset(viewsets.ModelViewSet):
+    queryset = RecurringTransaction.objects.all()
+    serializer_class = RecurringTransactionSerializer
+
+
 class AccountNameView(views.APIView):
     def get(self, request, format=None):
         serializer = serializers.AccountNameSerializer(Account.objects.all(), many=True)
+        return Response(serializer.data)
+
+
+class RecurrenceNameView(views.APIView):
+    def get(self, request, format=None):
+        serializer = serializers.RecurrenceNameSerializer(
+            RecurringTransaction.objects.all(), many=True)
         return Response(serializer.data)
 
 

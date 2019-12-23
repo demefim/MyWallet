@@ -1,3 +1,4 @@
+
 from datetime import date, timedelta
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -7,7 +8,7 @@ from django.views import generic
 from rest_framework.authtoken.models import Token as AuthToken
 
 from MyWallet.lib import last_day_of_month
-from MyWallet.models import Account, Split, Transaction
+from MyWallet.models import Account, RecurringTransaction, Split, Transaction
 
 
 class IndexView(LoginRequiredMixin, generic.TemplateView):
@@ -30,8 +31,10 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
 
         context['accounts'] = Account.objects.personal().shown_on_dashboard()
         upcoming = Split.objects.personal().upcoming().transfers_once()
+        recurrences = RecurringTransaction.objects.due_in_month()
 
         context['upcoming_transactions'] = upcoming
+        context['upcoming_recurrences'] = recurrences
         context['transactions'] = Split.objects.personal().transfers_once().past().select_related(
             'account', 'opposing_account', 'category', 'transaction')[:10]
         outstanding = 0
@@ -40,6 +43,13 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
                 outstanding += t.amount
         context['working_balance'] = context['balance'] + outstanding
         outstanding = 0
+        for r in recurrences:
+            if r.transaction_type == Transaction.WITHDRAW:
+                outstanding -= r.amount
+            elif r.transaction_type == Transaction.DEPOSIT:
+                outstanding += r.amount
+            if r.is_due:
+                context['overdue_transactions'] = True
 
         context['outstanding'] = outstanding
         context['expected_balance'] = context['working_balance'] + outstanding

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from MyWallet.models import Account, Category, Split, Transaction
+from MyWallet.models import Account, Category,  RecurringTransaction, Split, Transaction
 
 
 class AccountSerializer(serializers.ModelSerializer):
@@ -20,6 +20,11 @@ class AccountNameSerializer(serializers.ModelSerializer):
         model = Account
         fields = ('id', 'name', 'account_type')
 
+
+class RecurrenceNameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RecurringTransaction
+        fields = ('id', 'title')
 
 
 class SplitSerializer(serializers.ModelSerializer):
@@ -83,3 +88,10 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'active', 'last_modified')
         read_only_fields = ('last_modified',)
 
+
+class RecurringTransactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RecurringTransaction
+        fields = ('id', 'title', 'src', 'dst', 'amount', 'date',
+                  'recurrence', 'category', 'transaction_type', 'last_modified')
+        read_only_fields = ('last_modified',)

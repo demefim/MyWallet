@@ -10,12 +10,14 @@ from MyWallet.views import budgets as budget_views
 from MyWallet.views import categories as category_views
 from MyWallet.views import index as general_views
 from MyWallet.views import transactions as transaction_views
+from MyWallet.views import recurrences as recurrence_views
 
 
 router = routers.DefaultRouter()
 router.register(r'accounts', rest_views.AccountViewSet)
 router.register(r'transactions', rest_views.TransactionViewSet)
 router.register(r'categories', rest_views.CategoryViewSet)
+router.register(r'recurrences', rest_views.RecurringTransactionsViewset)
 
 urlpatterns = [
     path('', general_views.IndexView.as_view(), name='index'),
@@ -37,6 +39,21 @@ urlpatterns = [
     path('transactions/create/deposit/',
          transaction_views.TransactionCreate.as_view(), {'type': 'deposit'}, name='deposit_new'),
 
+path('recurrences/',
+         recurrence_views.RecurringTransactionIndex.as_view(), name='recurrences'),
+    path('recurrences/create/',
+         recurrence_views.RecurrenceCreateView.as_view(), name='recurrence_create'),
+    path('recurrences/disabled/',
+         recurrence_views.DisabledRecurrencesView.as_view(), name='disabled_recurrences'),
+    path('recurrences/<int:pk>/', recurrence_views.RecurrenceDetailView.as_view(),
+         name='recurrence_detail'),
+    path('recurrences/<int:pk>/update/', recurrence_views.RecurrenceUpdateView.as_view(),
+         name='recurrence_update'),
+    path('recurrences/<int:pk>/delete/', recurrence_views.RecurrenceDeleteView.as_view(),
+         name='recurrence_delete'),
+    path('recurrences/<int:pk>/transaction/create/',
+         recurrence_views.RecurrenceTransactionCreateView.as_view(),
+         name='recurrence_transaction_create'),
 
     path('categories/', category_views.CategoryIndex.as_view(), name='categories'),
     path('categories/month/', category_views.CategoryByMonth.as_view(), name='category_by_month'),
@@ -70,12 +87,16 @@ urlpatterns = [
          api.get_accounts_balance, name='api_accounts_balance'),
     path('api/category_spending/<dstart>/<dend>/',
          api.category_spending, name='category_spending'),
+    path('api/update_current_recurrences/',
+         recurrence_views.ReccurrenceSetNextOccurence.as_view(),
+         name='update_current_recurrences'),
 
 
     path('manifest.json', TemplateView.as_view(template_name='MyWallet/manifest.json'),
          name='manifest'),
 
     path('rest/account_names', rest_views.AccountNameView.as_view()),
+    path('rest/recurrence_names', rest_views.RecurrenceNameView.as_view()),
     path('rest/accounts/personal', rest_views.PersonalAccountsView.as_view()),
     path('rest/accounts/foreign', rest_views.ForeignAccountsView.as_view()),
     path('rest/', include(router.urls)),

@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.views import generic
 
-from MyWallet.forms import TransactionForm
+from MyWallet.forms import DepositForm, TransactionFormSet, TransferForm, WithdrawForm
 from MyWallet.models import Account, Split, Transaction
 
 
@@ -64,7 +64,12 @@ class TransactionCreate(LoginRequiredMixin, generic.edit.CreateView):
         return super(TransactionCreate, self).dispatch(request, *args, **kwargs)
 
     def get_form_class(self):
-        return TransactionForm
+        if self.type == 'transfer':
+            return TransferForm
+        elif self.type == 'withdraw':
+            return WithdrawForm
+        else:
+            return DepositForm
 
     def get_context_data(self, **kwargs):
         context = super(TransactionCreate, self).get_context_data(**kwargs)
@@ -96,7 +101,12 @@ class TransactionUpdateView(LoginRequiredMixin, generic.edit.UpdateView):
         return queryset.exclude(transaction_type=Transaction.SYSTEM)
 
     def get_form_class(self):
-        return TransactionForm
+        if self.object.transaction_type == Transaction.WITHDRAW:
+            return WithdrawForm
+        elif self.object.transaction_type == Transaction.DEPOSIT:
+            return DepositForm
+        else:
+            return TransferForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -104,3 +114,58 @@ class TransactionUpdateView(LoginRequiredMixin, generic.edit.UpdateView):
         return context
 
 
+class SplitCreate(LoginRequiredMixin, generic.edit.CreateView):
+    model = Transaction
+    template_name = 'MyWallet/transaction_split_form.html'
+    formset_class = TransactionFormSet
+    fields = '__all__'
+
+    def get_context_data(self, **kwargs):
+        context = super(SplitCreate, self).get_context_data(**kwargs)
+        context['formset'] = self.formset_class()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form(self.get_form_class())
+
+        if form.is_valid():
+            transaction = form.save(commit=False)
+            formset = self.formset_class(self.request.POST, instance=transaction)
+            if formset.is_valid():
+                transaction.save()
+                formset.save()
+                return HttpResponseRedirect(reverse('transaction_detail', args=[transaction.id]))
+        return self.render_to_response(self.get_context_data(form=form))
+
+
+class SplitUpdate(LoginRequiredMixin, generic.edit.UpdateView):
+    model = Transaction
+    template_name = 'MyWalet/transaction_split_form.html'
+    formset_class = TransactionFormSet
+    fields = '__all__'
+
+    def get_context_data(self, **kwargs):
+        context = super(SplitUpdate, self).get_context_data(**kwargs)
+        context['formset'] = self.formset_class(**self.get_form_kwargs())
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form(self.get_form_class())
+
+        if form.is_valid():
+            transaction = form.save(commit=False)
+            formset = self.formset_class(self.request.POST, instance=transaction)
+            if formset.is_valid():
+                fields = [form.cleaned_data.get('amount') for form in formset]
+                split_sums = sum([x for x in fields if x is not None])
+                if split_sums == 0:
+                    transaction.save()
+                    formset.save()
+                    return HttpResponseRedirect(reverse('transaction_detail',
+                                                        args=[transaction.id]))
+                else:
+                    form.add_error(
+                        '',
+                        'Sum of all splits has to be 0. You have {} remaining'.format(split_sums))
+        return self.render_to_response(self.get_context_data(form=form))
