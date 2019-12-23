@@ -24,6 +24,7 @@ class AccountCreateForm(forms.ModelForm):
             account.set_initial_balance(self.cleaned_data['initial_balance'])
         return account
 
+
 class BudgetForm(forms.Form):
     budget_id = forms.IntegerField()
     category_id = forms.IntegerField()
@@ -125,7 +126,7 @@ class WithdrawForm(TransactionForm):
     def save(self, commit=True):
         account, _ = models.Account.objects.get_or_create(
             name=self.cleaned_data['destination_account'],
-            account_type=models.Account.FOREIGN)
+            account_type=models.Account.PERSONAL)
         self.cleaned_data['destination_account'] = account
         return super().save(commit)
 
@@ -140,7 +141,7 @@ class DepositForm(TransactionForm):
 
     def save(self, commit=True):
         account, _ = models.Account.objects.get_or_create(name=self.cleaned_data['source_account'],
-                                                          account_type=models.Account.FOREIGN)
+                                                          account_type=models.Account.PERSONAL)
         self.cleaned_data['source_account'] = account
         return super().save(commit)
 

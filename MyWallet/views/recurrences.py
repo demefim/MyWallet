@@ -95,17 +95,14 @@ class RecurringTransactionIndex(LoginRequiredMixin, generic.ListView):
         last = last_day_of_month(today)
         remaining = 0
         for t in context['transactions']:
-            if t.interval == RecurringTransaction.MONTHLY or (
-                    t.interval == RecurringTransaction.ANNUALLY and
-                    t.date.month == today.month and t.date.year == today.year):
-                if t.transaction_type == Transaction.WITHDRAW:
-                    expenses += t.amount
-                    if t.date <= last:
-                        remaining -= t.amount
-                else:
-                    income += t.amount
-                    if t.date <= last:
-                        remaining += t.amount
+            if t.transaction_type == Transaction.WITHDRAW:
+                expenses += t.amount
+                if t.date <= last:
+                    remaining -= t.amount
+            else:
+                income += t.amount
+                if t.date <= last:
+                    remaining += t.amount
         context['expenses'] = expenses
         context['income'] = income
         context['total'] = income - expenses
