@@ -64,12 +64,6 @@
                 <i class="fa fa-home"></i> <span> Home </span>
               </a>
             </li>
-            <li class="{% if menu == "transactions" %}active{% endif %}">
-              <a href="{% url 'transactions' %}">
-                <i class="fa fa-exchange fa-fw"></i>
-                <span>{% trans 'Transactions' %}</span>
-              </a>
-            </li>
             <li{% if menu == "recurrences" %} class="active"{% endif %}>
               <a href="{% url 'recurrences' %}"><i class="fa fa-repeat"></i>
                 <span>{% trans 'Recurrences' %}</span>
