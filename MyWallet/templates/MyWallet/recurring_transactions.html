@@ -29,14 +29,6 @@
       </div>
     </div>
   </div>
-<div class="col-md-3">
-    <div class="small-box bg-yellow">
-      <div class="inner">
-        <h4>{% trans 'Remaining change this month' %}</h4>
-        <h3>{{ remaining|intcomma }}</h3>
-      </div>
-    </div>
-  </div>
 </div>
 <div class="box">
 <div class="box-header with-border">
@@ -45,12 +37,12 @@
 <div class="box-body">
 <table class="table table-striped">
   <tr>
-    <th>{% trans 'Title' %}</th>
-    <th>{% trans 'Date' %}</th>
-    <th>{% trans 'Amount' %}</th>
-    <th class="hidden-xs">{% trans 'Source Account' %}</th>
-    <th class="hidden-xs">{% trans 'Destination Account' %}</th>
-    <th class="hidden-xs">{% trans 'Recurrance' %}</th>
+    <th>Назва</th>
+    <th>Дата</th>
+    <th>ГРН</th>
+    <th class="hidden-xs"></th>
+    <th class="hidden-xs"></th>
+    <th class="hidden-xs">Платіж</th>
   </tr>
 {% for transaction in transactions %}
 <tr>
@@ -64,11 +56,11 @@
 </table>
 </div>
 <div class="box-footer">
-  <a href="{% url 'recurrence_create' %}" class="btn btn-primary">{% trans 'Create' %}</a>
-  <a href="{% url 'disabled_recurrences' %}" class="btn btn-default">{% trans 'Show disabled recurrences' %}</a>
+  <a href="{% url 'recurrence_create' %}" class="btn btn-primary">Створити</a>
+  <a href="{% url 'disabled_recurrences' %}" class="btn btn-default">Показати неактивні</a>
   <form style="display: inline-block;" method="POST" action="{% url 'update_current_recurrences' %}">
     {% csrf_token %}
-    <button class="btn btn-warning">{% trans 'Update current recurrence' %}</button>
+    <button class="btn btn-warning">Обновити поточний</button>
   </form>
 </div>
 </div>
