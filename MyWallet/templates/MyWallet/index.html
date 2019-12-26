@@ -5,11 +5,10 @@
 {% load humanize %}
 
 {% block content_header %}
-<h1>{% trans 'Home' %}
-  <small>{% trans 'All important stuff' %}</small>
+<h1>Витрати та доходи
 </h1>
 <ol class="breadcrumb">
-  <li class="active">{% trans 'Home' %}</li>
+  <li class="active">Витрати та доходи</li>
 </ol>
 {% endblock %}
 {% block content %}
@@ -17,24 +16,8 @@
   <div class="col-md-3">
     <div class="small-box bg-green">
       <div class="inner">
-        <h4>{% trans 'Current Balance' %}</h4>
+        <h4>Поточний баланс</h4>
         <h3>{{ balance|intcomma }}</h3>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="small-box bg-yellow">
-      <div class="inner">
-        <h4>{% trans 'Working Balance' %}</h4>
-        <h3>{{ working_balance|intcomma }}</h3>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="small-box bg-red">
-      <div class="inner">
-        <h4>{% trans 'Outstanding Recurrences' %}</h4>
-        <h3>{{ outstanding|intcomma }}</h3>
       </div>
     </div>
   </div>
@@ -59,13 +42,13 @@
         <table class="table">
           <tr><th></th><th>{{ today|date:"F" }}</th><th>{{ last_month|date:"F" }}</th></tr>
           <tr>
-            <th>{% trans 'Income' %}</th><td>{{ income|intcomma }}</td><td>{{ previous_income|intcomma }}</td>
+            <th>Дохід</th><td>{{ income|intcomma }}</td><td>{{ previous_income|intcomma }}</td>
           </tr>
           <tr>
-            <th>{% trans 'Expenses' %}</th><td class="text-red">{{ expenses|intcomma }}</td><td class="text-red">{{ previous_expenses|intcomma }}</td>
+            <th>Витрати</th><td class="text-red">{{ expenses|intcomma }}</td><td class="text-red">{{ previous_expenses|intcomma }}</td>
           </tr>
           <tr>
-            <th>{% trans 'Difference' %}</th><td{% if difference < 0 %} class="text-red"{% endif %}>{{ difference|intcomma }}</td><td{% if previous_difference < 0 %} class="text-red"{% endif %}>{{ previous_difference|intcomma }}</td>
+            <th>Різниця</th><td{% if difference < 0 %} class="text-red"{% endif %}>{{ difference|intcomma }}</td><td{% if previous_difference < 0 %} class="text-red"{% endif %}>{{ previous_difference|intcomma }}</td>
           </tr>
         </table>
       </div>
@@ -77,8 +60,8 @@
       <div class="box-body">
         <table class="table">
         <tr>
-        <th>{% trans 'Account' %}</th>
-        <th>{% trans 'Balance' %}</th>
+        <th>Аккаунт</th>
+        <th>Баланс</th>
         </tr>
         {% for account in accounts %}
         <tr>
@@ -93,7 +76,7 @@
   <div class="col-md-8 col-md-pull-4">
     <div class="box">
       <div class="box-header">
-        <h3 class="box-title">{% trans 'Balance' %}</h3>
+        <h3 class="box-title">Баланс</h3>
       </div>
       <div class="box-body">
         <canvas id="myChart" width="450" height="250"></canvas>
@@ -107,10 +90,10 @@
       <div class="box-body">
         <table class="table table-striped">
           <tr>
-            <th>{% trans 'Title' %}</th>
-            <th>{% trans 'Date' %}</th>
-            <th>{% trans 'Account' %}</th>
-            <th>{% trans 'Amount' %}</th>
+            <th>Назва</th>
+            <th>Дата</th>
+            <th>Аккаунт</th>
+            <th>грн</th>
           </tr>
           {% for transaction in upcoming_transactions %}
           <tr>
