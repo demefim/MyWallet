@@ -43,24 +43,3 @@ class IndexViewTestCase(TestCase):
                            Transaction.WITHDRAW, date(2100, 1, 1))
         context = self.client.get(reverse('index')).context
         self.assertEqual(context['balance'], 0)
-
-    def test_income(self):
-        pass
-
-    def test_expenses(self):
-        pass
-
-    def test_previous_income(self):
-        pass
-
-    def test_previous_expenses(self):
-        pass
-
-    def test_upcoming_transactions(self):
-        pass
-
-    def test_upcoming_recurrences(self):
-        pass
-
-    def test_outstanding_balance(self):
-        pass

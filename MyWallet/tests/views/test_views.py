@@ -102,32 +102,4 @@ class ViewTests(TestCase):
         self.assertEqual(context['form']['amount'].value(), 123)
         self.assertEqual(str(context['form']['date'].value()), '2017-01-01')
 
-    def test_context_and_initial_DepositUpdate(self):
-        form = DepositForm({
-            'title': 'transaction_title',
-            'source_account': self.revenue,
-            'destination_account': 2,
-            'amount': 123,
-            'date': '2017-01-01',
-            'transaction_type': Transaction.DEPOSIT
-            })
-
-        self.assertTrue(form.is_valid())
-        transaction = form.save()
-        url = reverse('transaction_update', args=[transaction.pk])
-        context = self.client.get(url).context
-        self.assertRedirects(self.client.post(url, {
-                    'title': 'transaction_title',
-                    'source_account': self.revenue,
-                    'destination_account': self.account.pk,
-                    'amount': 123,
-                    'date': '2017-01-01'},
-                    args=[transaction.pk]), reverse('transaction_detail', args=[transaction.pk]))
-        self.assertEqual(context['menu'], 'transactions')
-        self.assertFalse('submenu' in context)
-
-        self.assertEqual(context['form']['title'].value(), 'transaction_title')
-        self.assertEqual(context['form']['source_account'].value(), self.revenue)
-        self.assertEqual(context['form']['destination_account'].value(), self.account.pk)
-        self.assertEqual(context['form']['amount'].value(), 123)
-        self.assertEqual(str(context['form']['date'].value()), '2017-01-01')
+   
