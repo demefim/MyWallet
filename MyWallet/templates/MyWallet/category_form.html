@@ -3,16 +3,16 @@
 {% load widget_tweaks %}
 
 {% block content_header %}
-<h1>{% trans 'Categories' %}
+<h1>Статистика
   {% if object %}
   <small>{% blocktrans with object_name=object.name %}Update {{ object_name }}{% endblocktrans %}</small>
   {% else %}
-  <small>{% trans 'Create new category' %}</small>
+  <small>Створити нову категорію</small>
   {% endif %}
 </h1>
 <ol class="breadcrumb">
-  <li><a href="/">{% trans 'Home' %}</a></li>
-  <li><a href="{% url 'categories' %}">{% trans 'Categories' %}</a></li>
+  <li><a href="/">Витрати та доходи</a></li>
+  <li><a href="{% url 'categories' %}">Статистика</a></li>
   {% if object %}
   <li><a href="{{ object.get_absolute_url }}">{{ object.name }}</a></li>
   <li class="active">{% trans 'Update' %}</li>
@@ -25,7 +25,7 @@
 {% block content %}
 <div class="box">
   <div class="box-header with-border">
-    <h3 class="box-title">{% trans 'Category Details' %}</h3>
+    <h3 class="box-title">Деталі категорії</h3>
   </div>
   <form method="post" class="form-horizontal">
     <div class="box-body">
