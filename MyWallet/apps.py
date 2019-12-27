@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class SilverStrikeConfig(AppConfig):
+class MyWalletConfig(AppConfig):
     name = 'MyWallet'
