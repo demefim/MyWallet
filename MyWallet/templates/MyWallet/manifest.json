@@ -1,7 +1,7 @@
 {% load static %}
 {
-  "name": "SilverStrike",
-  "short_name": "AgStrike",
+  "name": "MyWallet",
+  "short_name": "mWall",
   "icons": [
     {
       "src": "{% static 'MyWallet/img/android-chrome-192x192.png' %}",
